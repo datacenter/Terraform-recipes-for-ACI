@@ -3,8 +3,8 @@ variable "credentials" {
   type = map(string)
   default = {
     apic_username = "admin"
-    apic_password = "password"
-    apic_url      = "https://apic-url"
+    apic_password = "C!sco12345"
+    apic_url      = "https://10.61.124.105"
   }
   sensitive = true
 }
