@@ -8,6 +8,7 @@ Example plans you can find here include:
 
 - Complete configuration of interface, interface policies, VLAN pools, domains
 - Comprehensive multi-tier tenant configuration
+- Different types of L3outs
 - Configuration of common features such as NTP, DNS, BGP Route Reflector (WIP)
 - etc. (WIP)
 
