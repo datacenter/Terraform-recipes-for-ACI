@@ -28,16 +28,7 @@ L3Out
                     - network type: broadcast
 
     + External EPG 1
-        + 172.16.1.0/24
-            - External Subnets for the External EPG
-        + 172.16.2.0/24
-            - External Subnets for the External EPG
-        + Contracts
-            - ICMP (provided)
-            - HTTP (consumed)
-
-    + External EPG 2
-        + 192.168.1.0/24
+        + 0.0.0.0/0
             - External Subnets for the External EPG
         + Contracts
             - ICMP (provided)
