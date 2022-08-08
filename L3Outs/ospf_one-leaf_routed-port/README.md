@@ -54,5 +54,3 @@ playbook and need to be created separately.
    (router)
   172.16.1.0/24
 ```
-
-## More Explanations
