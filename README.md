@@ -6,7 +6,7 @@ The playbooks make use of [native ACI Terraform resources](https://registry.terr
 They are kept as simple as possible to make them easy to understand and reuse in your environment.
 Example plans you can find here include:
 
-- Complete configuration of interface, interface policies, VLAN pools, domains (WIP)
+- Complete configuration of interface, interface policies, VLAN pools, domains
 - Comprehensive multi-tier tenant configuration
 - Configuration of common features such as NTP, DNS, BGP Route Reflector (WIP)
 - etc. (WIP)
