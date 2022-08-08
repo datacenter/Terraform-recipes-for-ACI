@@ -31,8 +31,7 @@ L3Out
             - ICMP (provided)
 ```
 Note:
-The following non-L3Out components are not created by this
-playbook and need to be created separately.
+The following non-L3Out components are not created by this plan and need to be created separately.
 * Access Policies (Interface profiles, Interface Policy Group and such)
 * A L3Out Domain with an AEP and a VLAN pool
 * Contracts
