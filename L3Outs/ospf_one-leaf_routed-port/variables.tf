@@ -14,7 +14,7 @@ data "aci_tenant" "tenant" {
   name = "common"
 }
 
-# Existing VRF that for the new L3out
+# Existing VRF for the new L3out
 data "aci_vrf" "vrf" {
   tenant_dn = data.aci_tenant.tenant.id
   name      = "default"
