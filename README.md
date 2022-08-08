@@ -2,7 +2,7 @@
 ## _Simple yet powerful plans you can use_
 
 This repo contains a series of Terraform plans you can use with [Cisco ACI](https://www.cisco.com/c/en/us/solutions/data-center-virtualization/application-centric-infrastructure/index.html).
-The playbooks make use of [native ACI Terraform resources](https://registry.terraform.io/providers/CiscoDevNet/aci/latest/docs) as much as possible.
+The plans make use of [native ACI Terraform resources](https://registry.terraform.io/providers/CiscoDevNet/aci/latest/docs) as much as possible.
 They are kept as simple as possible to make them easy to understand and reuse in your environment.
 Example plans you can find here include:
 
