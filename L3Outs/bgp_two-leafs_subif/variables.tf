@@ -22,7 +22,7 @@ data "aci_vrf" "vrf" {
 
 # Existing L3 Domain for the new L3Out
 data "aci_l3_domain_profile" "l3out_dom" {
-  name = "L3out"
+  name = "internet"
 }
 
 # Existing contract to be provided from the new L3Out External EPG
@@ -78,12 +78,6 @@ variable "nodes" {
         ttl        = "1"
       }
     }
-  }
-}
-locals {
-  nodes_mapping = {
-    "101" = var.nodes["101"]
-    "102" = var.nodes["102"]
   }
 }
 

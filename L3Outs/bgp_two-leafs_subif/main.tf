@@ -52,7 +52,7 @@ resource "aci_l3out_bgp_external_policy" "l3out_bgp" {
 
 # Create L3out Nodes
 resource "aci_logical_node_to_fabric_node" "l3out_nodes" {
-  for_each                = local.nodes_mapping
+  for_each                = var.nodes
   logical_node_profile_dn = aci_logical_node_profile.logical_node_profile.id
   tdn                     = "topology/pod-${each.value.pod_id}/node-${each.value.node_id}"
   rtr_id                  = each.value.router_id
@@ -61,7 +61,7 @@ resource "aci_logical_node_to_fabric_node" "l3out_nodes" {
 
 # Create L3Out subinterface configuration
 resource "aci_l3out_path_attachment" "l3out_subints" {
-  for_each                     = local.nodes_mapping
+  for_each                     = var.nodes
   logical_interface_profile_dn = aci_logical_interface_profile.logical_interface_profile.id
   target_dn                    = "topology/pod-${each.value.pod_id}/paths-${each.value.node_id}/pathep-[${each.value.if_path}]"
   if_inst_t                    = each.value.if_type
@@ -73,7 +73,7 @@ resource "aci_l3out_path_attachment" "l3out_subints" {
 
 # Create L3out BGP peers configuration
 resource "aci_bgp_peer_connectivity_profile" "l3out_bgp_peers" {
-  for_each  = local.nodes_mapping
+  for_each  = var.nodes
   parent_dn = aci_l3out_path_attachment.l3out_subints[each.key].id
   addr      = each.value.bgp_peers.peer_ip
   ttl       = each.value.bgp_peers.ttl
