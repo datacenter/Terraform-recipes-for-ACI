@@ -9,13 +9,12 @@ Example plans you can find here include:
 - Complete configuration of interface, interface policies, VLAN pools, domains
 - Comprehensive multi-tier tenant configuration
 - Different types of L3outs
-- Configuration of common features such as NTP, DNS, BGP Route Reflector (WIP)
-- etc. (WIP)
+- Configuration of common features such as NTP, DNS, BGP Route Reflector
 
 ## _How to use this code_
 
 Please check [here](https://learn.hashicorp.com/tutorials/terraform/install-cli) for installation instructions.
-Inside each directory you'll find a `main.tf` that contains Terraform resources, and a variables.tf which can be modified to fit your needs.
+Inside each directory you'll find a `main.tf` that contains Terraform resources, and a `variables.tf` which can be modified to fit your needs.
 
 ## _Disclaimer and license_
 
