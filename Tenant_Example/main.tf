@@ -34,18 +34,18 @@ resource "aci_vrf" "vrf1" {
 
 # Bridge Domains
 resource "aci_bridge_domain" "bds" {
-  for_each                 = local.bd_mapping
+  for_each                 = var.bds
   name                     = each.key
   tenant_dn                = aci_tenant.tenant1.id
   relation_fv_rs_ctx       = aci_vrf.vrf1.id
-  relation_fv_rs_bd_to_out = [for key, value in local.epg_mapping : data.aci_l3_outside.shared_l3_out.id if value.external_access == true && value.bd == each.key]
+  relation_fv_rs_bd_to_out = [for key, value in var.epgs : data.aci_l3_outside.shared_l3_out.id if value.external_access == true && value.bd == each.key]
 }
 
 # Bridge Domains Subnets
 resource "aci_subnet" "subnets" {
-  for_each  = { for key, value in local.epg_mapping : key => value }
-  parent_dn = aci_bridge_domain.bds[local.epg_mapping[each.key].bd].id
-  ip        = local.bd_mapping[local.epg_mapping[each.key].bd].ip
+  for_each  = { for key, value in var.epgs : key => value }
+  parent_dn = aci_bridge_domain.bds[var.epgs[each.key].bd].id
+  ip        = var.bds[var.epgs[each.key].bd].ip
   scope     = each.value.external_access ? ["public", "shared"] : ["private"]
 }
 
@@ -58,16 +58,16 @@ resource "aci_application_profile" "ap1" {
 # EPGs
 resource "aci_application_epg" "epgs" {
   depends_on             = [aci_bridge_domain.bds]
-  for_each               = local.epg_mapping
+  for_each               = var.epgs
   name                   = each.key
-  description            = local.epg_mapping[each.key].description
-  application_profile_dn = "uni/tn-${aci_tenant.tenant1.name}/ap-${local.epg_mapping[each.key].ap}"
-  relation_fv_rs_bd      = "uni/tn-${aci_tenant.tenant1.name}/BD-${local.epg_mapping[each.key].bd}"
+  description            = var.epgs[each.key].description
+  application_profile_dn = "uni/tn-${aci_tenant.tenant1.name}/ap-${var.epgs[each.key].ap}"
+  relation_fv_rs_bd      = "uni/tn-${aci_tenant.tenant1.name}/BD-${var.epgs[each.key].bd}"
 }
 
 # EPGs to Domain
 resource "aci_epg_to_domain" "epgs_domain" {
-  for_each = local.epg_mapping
+  for_each = var.epgs
   application_epg_dn    = aci_application_epg.epgs[each.key].id
   tdn                   = "uni/${each.value.domain_type}-${each.value.domain}"
 }
@@ -75,34 +75,34 @@ resource "aci_epg_to_domain" "epgs_domain" {
 # Static path binding type Port-Channel or Interface
 resource "aci_epg_to_static_path" "switchport" {
   depends_on         = [aci_application_epg.epgs]
-  for_each           = { for key, value in local.static_path_mapping : key => value if value.iftype != "vpc" }
-  application_epg_dn = "uni/tn-${aci_tenant.tenant1.name}/ap-${var.ap}/epg-${local.static_path_mapping[each.key].epg}"
-  tdn                = "topology/pod-${local.static_path_mapping[each.key].pod}/paths-${local.static_path_mapping[each.key].leaf}/pathep-[${local.static_path_mapping[each.key].if}]"
+  for_each           = { for key, value in var.static_paths : key => value if value.iftype != "vpc" }
+  application_epg_dn = "uni/tn-${aci_tenant.tenant1.name}/ap-${var.ap}/epg-${var.static_paths[each.key].epg}"
+  tdn                = "topology/pod-${var.static_paths[each.key].pod}/paths-${var.static_paths[each.key].leaf}/pathep-[${var.static_paths[each.key].if}]"
   mode               = each.value.ifmode
-  encap              = "vlan-${local.static_path_mapping[each.key].encap}"
+  encap              = "vlan-${var.static_paths[each.key].encap}"
 }
 
 # Static path binding type VPC
 resource "aci_epg_to_static_path" "vpc" {
   depends_on         = [aci_application_epg.epgs]
-  for_each           = { for key, value in local.static_path_mapping : key => value if value.iftype == "vpc" }
-  application_epg_dn = "uni/tn-${aci_tenant.tenant1.name}/ap-${var.ap}/epg-${local.static_path_mapping[each.key].epg}"
-  tdn                = "topology/pod-${local.static_path_mapping[each.key].pod}/protpaths-${local.static_path_mapping[each.key].leaf}/pathep-[${local.static_path_mapping[each.key].if}]"
+  for_each           = { for key, value in var.static_paths : key => value if value.iftype == "vpc" }
+  application_epg_dn = "uni/tn-${aci_tenant.tenant1.name}/ap-${var.ap}/epg-${var.static_paths[each.key].epg}"
+  tdn                = "topology/pod-${var.static_paths[each.key].pod}/protpaths-${var.static_paths[each.key].leaf}/pathep-[${var.static_paths[each.key].if}]"
   mode               = each.value.ifmode
-  encap              = "vlan-${local.static_path_mapping[each.key].encap}"
+  encap              = "vlan-${var.static_paths[each.key].encap}"
 }
 
 # Filters
 resource "aci_filter" "filters" {
   tenant_dn = aci_tenant.tenant1.id
-  for_each  = local.filter_mapping
+  for_each  = var.filters
   name      = each.key
 }
 
 # Filter entries
 resource "aci_filter_entry" "filter_entries" {
   depends_on  = [aci_filter.filters]
-  for_each    = local.filter_mapping
+  for_each    = var.filters
   filter_dn   = "uni/tn-${aci_tenant.tenant1.name}/flt-${each.key}"
   name        = each.key
   d_from_port = each.value.destination_from_port
@@ -113,7 +113,7 @@ resource "aci_filter_entry" "filter_entries" {
 
 # Contracts
 resource "aci_contract" "contracts" {
-  for_each  = local.contract_mapping
+  for_each  = var.contracts
   tenant_dn = aci_tenant.tenant1.id
   name      = each.key
 }
@@ -121,7 +121,7 @@ resource "aci_contract" "contracts" {
 # Contract Subjects
 resource "aci_contract_subject" "subjects" {
   depends_on                   = [aci_contract.contracts]
-  for_each                     = local.contract_mapping
+  for_each                     = var.contracts
   contract_dn                  = "uni/tn-${aci_tenant.tenant1.name}/brc-${each.key}"
   name                         = each.value.subject
   relation_vz_rs_subj_filt_att = [for f in each.value.filter : "uni/tn-${aci_tenant.tenant1.name}/flt-${f}"]
@@ -130,8 +130,8 @@ resource "aci_contract_subject" "subjects" {
 # Contract consumers
 resource "aci_epg_to_contract" "con_providers" {
   depends_on         = [aci_application_epg.epgs]
-  for_each           = { for key, value in local.contract_to_epg_mapping : key => value if value.provider != "" }
-  application_epg_dn = "uni/tn-${aci_tenant.tenant1.name}/ap-${var.ap}/epg-${local.contract_to_epg_mapping[each.key].provider}"
+  for_each           = { for key, value in var.contract_to_epgs : key => value if value.provider != "" }
+  application_epg_dn = "uni/tn-${aci_tenant.tenant1.name}/ap-${var.ap}/epg-${var.contract_to_epgs[each.key].provider}"
   contract_dn        = "uni/tn-${aci_tenant.tenant1.name}/brc-${each.key}"
   contract_type      = "provider"
 }
@@ -139,8 +139,8 @@ resource "aci_epg_to_contract" "con_providers" {
 # Contract providers
 resource "aci_epg_to_contract" "con_consumers" {
   depends_on         = [aci_application_epg.epgs]
-  for_each           = { for key, value in local.contract_to_epg_mapping : key => value if value.consumer != "" }
-  application_epg_dn = "uni/tn-${aci_tenant.tenant1.name}/ap-${var.ap}/epg-${local.contract_to_epg_mapping[each.key].consumer}"
+  for_each           = { for key, value in var.contract_to_epgs : key => value if value.consumer != "" }
+  application_epg_dn = "uni/tn-${aci_tenant.tenant1.name}/ap-${var.ap}/epg-${var.contract_to_epgs[each.key].consumer}"
   contract_dn        = "uni/tn-${aci_tenant.tenant1.name}/brc-${each.key}"
   contract_type      = "consumer"
 }
@@ -164,7 +164,7 @@ resource "aci_l3_ext_subnet" "ext_epg_subnet" {
 
 # Contracts used with shared L3out
 resource "aci_contract" "external_routing_contracts" {
-  for_each  = { for key, value in local.epg_mapping : key => value if value.external_access == true }
+  for_each  = { for key, value in var.epgs : key => value if value.external_access == true }
   tenant_dn = aci_tenant.tenant1.id
   name      = "${aci_tenant.tenant1.name}-${aci_application_epg.epgs[each.key].name}-to-common"
   scope     = "global"
@@ -182,7 +182,7 @@ resource "aci_contract_subject" "external_routing" {
 
 # Contract providers used with shared L3out
 resource "aci_epg_to_contract" "aci_epgs_to_common" {
-  for_each           = { for key, value in local.epg_mapping : key => value if value.external_access == true }
+  for_each           = { for key, value in var.epgs : key => value if value.external_access == true }
   application_epg_dn = "uni/tn-${aci_tenant.tenant1.name}/ap-${var.ap}/epg-${each.key}"
   contract_dn        = aci_contract.external_routing_contracts[each.key].id
   contract_type      = "provider"
@@ -198,17 +198,17 @@ resource "aci_imported_contract" "imported_contracts" {
 
 resource "aci_subnet" "epg_subnets" {
   depends_on = [aci_subnet.subnets]
-  for_each  = { for key, value in local.epg_mapping : key => value if value.external_access == true }
+  for_each  = { for key, value in var.epgs : key => value if value.external_access == true }
   parent_dn = aci_application_epg.epgs[each.key].id
-  ip        = local.bd_mapping[local.epg_mapping[each.key].bd].ip
+  ip        = var.bds[var.epgs[each.key].bd].ip
   scope     = ["public", "shared"]
 }
 
 # # Leaking subnets to shared L3out VRF for when you use ESGs
 # resource "aci_vrf_leak_epg_bd_subnet" "vrf_leak_epg_bd_subnet" {
-#   for_each = { for key, value in local.epg_mapping : key => value if value.external_access == true }
+#   for_each = { for key, value in var.epgs : key => value if value.external_access == true }
 #   vrf_dn                    = aci_vrf.vrf1.id
-#   ip                        = local.bd_mapping[local.epg_mapping[each.key].bd].ip
+#   ip                        = var.bds[var.epgs[each.key].bd].ip
 #   allow_l3out_advertisement = true
 #   leak_to {
 #     vrf_dn                    = data.aci_vrf.common_vrf.id
