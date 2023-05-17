@@ -1,0 +1,50 @@
+---
+vmware_vmm_domains:
+  - name: ESG_vmmdom
+    vlan_pool: ESG_VLAN_pool
+    access_mode: read-write
+    tag_collection: true
+    credential_policies:
+      - name: vc_cred
+        username: ${vc_username}
+        password: ${vc_password}
+    vcenters:
+      - name: vc1
+        hostname_ip: ${vc_ip}
+        datacenter: ${vc_datacenter}
+        credential_policy: vc_cred
+
+physical_domains:
+  - name: ESG_phydom
+    vlan_pool: ESG_VLAN_pool
+
+vlan_pools:
+  - name: ESG_VLAN_pool
+    allocation: dynamic
+    ranges:
+      - from: 10
+        to: 49
+        allocation: static
+      - from: 100
+        to: 149
+        allocation: dynamic
+
+aaeps:
+  - name: ESG_AEP
+    physical_domains: [ESG_phydom]
+    vmm_domains: [ESG_vmmdom]
+
+interface_policy_groups:
+  - name: ESG_IFPG
+    aaep: ESG_AEP
+
+interface_profiles:
+  - name: ESG_101
+    node_id: 101
+    interfaces:
+      - port: 1
+        policy_group: ESG_IFPG
+      - port: 12
+        policy_group: ESG_IFPG
+      - port: 24
+        policy_group: ESG_IFPG
