@@ -1,0 +1,118 @@
+---
+tenants:
+  - name: ESG_Ch2_Ex05
+
+    application_profiles:
+      - name: security-zones
+        endpoint_security_groups:
+          - name: application-01
+            vrf: vrf-01
+            tag_selectors:
+              - match_key: app
+                match_value: application-01
+                match_operator: equals
+          - name: application-02
+            vrf: vrf-01
+            tag_selectors:
+              - match_key: app
+                match_value: application-02
+                match_operator: equals
+
+      - name: network-segments
+        endpoint_groups:
+          - name: VLAN10_11
+            bridge_domain: 10.0.1.0_24
+            intra_epg_isolation: true
+            proxy_arp: true
+            physical_domains:
+              - name: ESG_phydom
+            static_ports:
+              - vlan_id: 10
+                primary_vlan_id: 11
+                pod_id: 1
+                node_id: 101
+                port_id: 24
+          - name: VLAN20_21
+            bridge_domain: 10.0.2.0_24
+            intra_epg_isolation: true
+            proxy_arp: true
+            physical_domains:
+              - name: ESG_phydom
+            static_ports:
+              - vlan_id: 20
+                primary_vlan_id: 21
+                pod_id: 1
+                node_id: 101
+                port_id: 24
+          - name: VLAN30_31
+            bridge_domain: 10.0.3.0_24
+            intra_epg_isolation: true
+            proxy_arp: true
+            physical_domains:
+              - name: ESG_phydom
+            static_ports:
+              - vlan_id: 30
+                primary_vlan_id: 31
+                pod_id: 1
+                node_id: 101
+                port_id: 24
+
+    vrfs:
+      - name: vrf-01
+
+    bridge_domains:
+      - name: 10.0.1.0_24
+        vrf: vrf-01
+        subnets:
+          - ip: 10.0.1.1/24
+            scope:
+              - private
+      - name: 10.0.2.0_24
+        vrf: vrf-01
+        subnets:
+          - ip: 10.0.2.1/24
+            scope:
+              - private
+      - name: 10.0.3.0_24
+        vrf: vrf-01
+        subnets:
+          - ip: 10.0.3.1/24
+            scope:
+              - private
+
+    ip_endpoints:
+      - vrf: vrf-01
+        address: 10.0.1.101
+        policy_tags:
+          - key: app
+            value: application-01
+
+      - vrf: vrf-01
+        address: 10.0.1.102
+        policy_tags:
+          - key: app
+            value: application-02
+
+      - vrf: vrf-01
+        address: 10.0.2.101
+        policy_tags:
+          - key: app
+            value: application-01
+
+      - vrf: vrf-01
+        address: 10.0.2.102
+        policy_tags:
+          - key: app
+            value: application-02
+
+      - vrf: vrf-01
+        address: 10.0.3.101
+        policy_tags:
+          - key: app
+            value: application-01
+
+      - vrf: vrf-01
+        address: 10.0.3.102
+        policy_tags:
+          - key: app
+            value: application-02

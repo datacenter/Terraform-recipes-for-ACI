@@ -1,0 +1,116 @@
+---
+tenants:
+  - name: ESG_Ch2_Ex13
+
+    application_profiles:
+      - name: security-zones
+        endpoint_security_groups:
+          - name: zone1
+            vrf: vrf-01
+            epg_selectors:
+              - application_profile: network-segments
+                endpoint_group: VLAN10
+              - application_profile: network-segments
+                endpoint_group: VLAN20
+            intra_esg_isolation: true
+            contracts:
+              intra_esgs:
+                - tenant: common
+                  name: default
+          - name: zone2
+            vrf: vrf-01
+            epg_selectors:
+              - application_profile: network-segments
+                endpoint_group: VLAN30
+            intra_esg_isolation: true
+            contracts:
+              intra_esgs:
+                - tenant: common
+                  name: default
+          - name: IP_based_group
+            vrf: vrf-01
+            tag_selectors:
+              - match_key: app
+                match_value: ip-base
+                match_operator: equals
+
+      - name: network-segments
+        endpoint_groups:
+          - name: VLAN10
+            bridge_domain: 10.0.1.0_24
+            proxy_arp: true
+            physical_domains:
+              - name: ESG_phydom
+            static_ports:
+              - vlan_id: 10
+                pod_id: 1
+                node_id: 101
+                port_id: 1
+              - vlan_id: 10
+                pod_id: 1
+                node_id: 101
+                port_id: 12
+          - name: VLAN20
+            bridge_domain: 10.0.2.0_24
+            proxy_arp: true
+            physical_domains:
+              - name: ESG_phydom
+            static_ports:
+              - vlan_id: 20
+                pod_id: 1
+                node_id: 101
+                port_id: 1
+              - vlan_id: 20
+                pod_id: 1
+                node_id: 101
+                port_id: 12
+          - name: VLAN30
+            bridge_domain: 10.0.3.0_24
+            proxy_arp: true
+            physical_domains:
+              - name: ESG_phydom
+            static_ports:
+              - vlan_id: 30
+                pod_id: 1
+                node_id: 101
+                port_id: 1
+              - vlan_id: 30
+                pod_id: 1
+                node_id: 101
+                port_id: 12
+
+    vrfs:
+      - name: vrf-01
+
+    bridge_domains:
+      - name: 10.0.1.0_24
+        vrf: vrf-01
+        subnets:
+          - ip: 10.0.1.1/24
+            scope:
+              - private
+      - name: 10.0.2.0_24
+        vrf: vrf-01
+        subnets:
+          - ip: 10.0.2.1/24
+            scope:
+              - private
+      - name: 10.0.3.0_24
+        vrf: vrf-01
+        subnets:
+          - ip: 10.0.3.1/24
+            scope:
+              - private
+
+    ip_endpoints:
+      - vrf: vrf-01
+        address: 10.0.1.101
+        policy_tags:
+          - key: app
+            value: ip-base
+
+      - vrf: vrf-01
+        address: 10.0.1.102
+        policy_tags:
+          - key: app
+            value: ip-base

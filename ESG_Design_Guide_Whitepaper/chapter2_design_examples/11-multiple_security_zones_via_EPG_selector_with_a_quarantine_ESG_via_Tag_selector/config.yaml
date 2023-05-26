@@ -1,0 +1,73 @@
+---
+tenants:
+  - name: ESG_Ch2_Ex11
+
+    application_profiles:
+      - name: security-zones
+        endpoint_security_groups:
+          - name: zone1
+            vrf: vrf-01
+            epg_selectors:
+              - application_profile: network-segments
+                endpoint_group: VLAN10_11
+              - application_profile: network-segments
+                endpoint_group: VLAN20_21
+          - name: zone2
+            vrf: vrf-01
+            epg_selectors:
+              - application_profile: network-segments
+                endpoint_group: VLAN30_31
+          - name: quarantine
+            vrf: vrf-01
+            intra_esg_isolation: true
+            tag_selectors:
+              - match_key: app
+                match_value: quarantine
+                match_operator: equals
+
+      - name: network-segments
+        endpoint_groups:
+          - name: VLAN10_11
+            bridge_domain: 10.0.1.0_24
+            vmware_vmm_domains:
+              - name: ESG_vmmdom
+                u_segmentation: true
+                deployment_immediacy: immediate
+                resolution_immediacy: immediate
+          - name: VLAN20_21
+            bridge_domain: 10.0.2.0_24
+            vmware_vmm_domains:
+              - name: ESG_vmmdom
+                u_segmentation: true
+                deployment_immediacy: immediate
+                resolution_immediacy: immediate
+          - name: VLAN30_31
+            bridge_domain: 10.0.3.0_24
+            vmware_vmm_domains:
+              - name: ESG_vmmdom
+                u_segmentation: true
+                deployment_immediacy: immediate
+                resolution_immediacy: immediate
+
+    vrfs:
+      - name: vrf-01
+
+    bridge_domains:
+      - name: 10.0.1.0_24
+        vrf: vrf-01
+        subnets:
+          - ip: 10.0.1.1/24
+            scope:
+              - private
+      - name: 10.0.2.0_24
+        vrf: vrf-01
+        subnets:
+          - ip: 10.0.2.1/24
+            scope:
+              - private
+      - name: 10.0.3.0_24
+        vrf: vrf-01
+        subnets:
+          - ip: 10.0.3.1/24
+            scope:
+              - private

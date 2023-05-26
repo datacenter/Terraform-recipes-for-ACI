@@ -423,3 +423,6 @@ tests/results/
 
 # Pabot
 .pabotsuitenames
+
+# General Logs
+*.log

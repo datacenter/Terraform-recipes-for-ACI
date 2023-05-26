@@ -1,0 +1,109 @@
+---
+tenants:
+  - name: ESG_Ch2_Ex06
+
+    application_profiles:
+      - name: security-zones
+        endpoint_security_groups:
+          - name: application-01
+            vrf: vrf-01
+            tag_selectors:
+              - match_key: app
+                match_value: application-01
+                match_operator: equals
+          - name: application-02
+            vrf: vrf-01
+            tag_selectors:
+              - match_key: app
+                match_value: application-02
+                match_operator: equals
+
+      - name: network-segments
+        endpoint_groups:
+          - name: VLAN10
+            bridge_domain: 10.0.1.0_24
+            physical_domains:
+              - name: ESG_phydom
+            static_ports:
+              - vlan_id: 10
+                pod_id: 1
+                node_id: 101
+                port_id: 1
+          - name: VLAN20
+            bridge_domain: 10.0.2.0_24
+            physical_domains:
+              - name: ESG_phydom
+            static_ports:
+              - vlan_id: 20
+                pod_id: 1
+                node_id: 101
+                port_id: 1
+          - name: VLAN30
+            bridge_domain: 10.0.3.0_24
+            physical_domains:
+              - name: ESG_phydom
+            static_ports:
+              - vlan_id: 30
+                pod_id: 1
+                node_id: 101
+                port_id: 1
+
+    vrfs:
+      - name: vrf-01
+
+    bridge_domains:
+      - name: 10.0.1.0_24
+        vrf: vrf-01
+        subnets:
+          - ip: 10.0.1.1/24
+            scope:
+              - private
+      - name: 10.0.2.0_24
+        vrf: vrf-01
+        subnets:
+          - ip: 10.0.2.1/24
+            scope:
+              - private
+      - name: 10.0.3.0_24
+        vrf: vrf-01
+        subnets:
+          - ip: 10.0.3.1/24
+            scope:
+              - private
+
+    mac_endpoints:
+      - bridge_domain: 10.0.1.0_24
+        address: 00:00:00:00:11:01
+        policy_tags:
+          - key: app
+            value: application-01
+
+      - bridge_domain: 10.0.1.0_24
+        address: 00:00:00:00:11:02
+        policy_tags:
+          - key: app
+            value: application-02
+
+      - bridge_domain: 10.0.2.0_24
+        address: 00:00:00:00:22:01
+        policy_tags:
+          - key: app
+            value: application-01
+
+      - bridge_domain: 10.0.2.0_24
+        address: 00:00:00:00:22:02
+        policy_tags:
+          - key: app
+            value: application-02
+
+      - bridge_domain: 10.0.3.0_24
+        address: 00:00:00:00:33:01
+        policy_tags:
+          - key: app
+            value: application-01
+
+      - bridge_domain: 10.0.3.0_24
+        address: 00:00:00:00:33:02
+        policy_tags:
+          - key: app
+            value: application-02
