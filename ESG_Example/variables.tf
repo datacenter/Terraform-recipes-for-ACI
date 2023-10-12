@@ -11,7 +11,7 @@ variable "credentials" {
 
 # Name of tenant that contains your applications
 variable "tenant" {
-  default = "demo-non-vmm"
+  default = "your-tenant"
 }
 
 # Name of VRF containing IP addresses associated with your applications
