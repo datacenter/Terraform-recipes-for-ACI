@@ -2,7 +2,7 @@
   # This Terraform plan creates a complete tenant on ACI using variables      #
   # which are defined in variables.tf                                         #
   #                                                                           #
-  # This playbook assumes a shared L3out called internet is already in place. #
+  # This plan assumes a shared L3out called internet is already in place.     #
   # Tailor as you see fit.                                                    #
   #############################################################################
 
