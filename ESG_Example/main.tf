@@ -67,25 +67,27 @@ resource "aci_rest_managed" "fvEpMacTags" {
   dn         = "uni/tn-${var.tenant}/eptags/epmactag-${each.value.fvcep_objects[0].mac}-[*]"
   class_name = "fvEpMacTag"
   content = {
-    mac     = each.value.fvcep_objects[0].mac
-    ctxName = var.vrf
+    annotation = "orchestrator:terraform"
+    mac        = each.value.fvcep_objects[0].mac
+    ctxName    = var.vrf
+    status     = "created, modified"
   }
   child {
     class_name = "tagTag"
-    rn         = "tagKey-Apps"
+    rn         = "tagKey-ApplicationName"
     content = {
-      key   = "Apps"
+      key   = "ApplicationName"
       value = var.ips[each.key].app
     }
   }
-}
+} 
 
 # Create an Endpoint Security Group Tag Selector for each provided application tag
-resource "aci_endpoint_security_group_tag_selector" "example" {
-  depends_on                 = [aci_rest_managed.fvEpMacTags]
+resource "aci_endpoint_security_group_tag_selector" "tags" {
+  depends_on                 = [aci_endpoint_security_group.esgs]
   for_each                   = aci_application_profile.aps
   endpoint_security_group_dn = "${each.value.id}/esg-${var.esg}"
-  match_key                  = "Apps"
+  match_key                  = "ApplicationName"
   match_value                = each.value.name
   value_operator             = "equals"
 }
