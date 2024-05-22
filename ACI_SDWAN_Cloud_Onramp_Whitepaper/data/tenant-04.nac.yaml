@@ -33,24 +33,16 @@ apic:
                   shared: true     
                   public: true 
                   no_default_gateway: true
-              vmware_vmm_domains:
-              - name: HX-ACI
-                deployment_immediacy: immediate
               contracts:
                 providers:
                   - permit-to-192.168.200.0_24
 
             - name: 192.168.201.0_24
               bridge_domain: 192.168.201.0_24
-              vmware_vmm_domains:
-              - name: HX-ACI
-                deployment_immediacy: immediate
 
             - name: 192.168.202.0_24
               bridge_domain: 192.168.202.0_24
-              vmware_vmm_domains:
-              - name: HX-ACI
-                deployment_immediacy: immediate
+
 
       filters:
         - name: tcp-src-any-to-dst-any

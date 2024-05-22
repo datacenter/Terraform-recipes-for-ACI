@@ -5,12 +5,9 @@ apic:
         allocation: static
         ranges:
           - from: 2051
-            allocation: inherit
-            role: external
             description: vlan to c8500-1
             to: 2051
           - from: 3051
-            allocation: inherit
             description: vlan to c8500-2
             to: 3051
 
@@ -18,12 +15,9 @@ apic:
         allocation: static
         ranges:
           - from: 2052
-            allocation: inherit
-            role: external
             description: vlan to c8500-1
             to: 2052
           - from: 3052
-            allocation: inherit
             description: vlan to c8500-2
             to: 3052
 
@@ -31,12 +25,9 @@ apic:
         allocation: static
         ranges:
           - from: 2053
-            allocation: inherit
-            role: external
             description: vlan to c8500-1
             to: 2053
           - from: 3053
-            allocation: inherit
             description: vlan to c8500-2
             to: 3053
 
@@ -52,14 +43,12 @@ apic:
 
     aaeps:
       - name: c8500-1-allowed-vlans
-        infra_vlan: false
         routed_domains:
         - tenant-01.vrf-01-bgp
         - tenant-02.vrf-01-bgp
         - shared-services.vrf-01-bgp
             
       - name: c8500-2-allowed-vlans
-        infra_vlan: false
         routed_domains:
           - tenant-01.vrf-01-bgp
           - tenant-02.vrf-01-bgp
@@ -162,4 +151,3 @@ apic:
                 description: connected to c8500-2-TE0/0/6
                 from_module: 1
                 from_port: 48
-  

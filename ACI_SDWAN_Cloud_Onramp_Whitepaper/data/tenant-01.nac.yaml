@@ -60,7 +60,7 @@ apic:
             - name: tcp-entries
               filters:
                 - filter: tcp-src-any-to-dst-any
-                
+
             - name: other-entries
               filters:
                 - filter: icmp-src-any-to-dst-any
@@ -91,24 +91,7 @@ apic:
                         - ip: 10.20.51.2/30
                           remote_as: 65051
                           local_as: 65151
-                          allow_self_as: false
-                          as_override: false
-                          disable_peer_as_check: false
-                          next_hop_self: false
-                          send_community: false
-                          send_ext_community: false
-                          allowed_self_as_count: 3
-                          bfd: false
-                          disable_connected_check: false
-                          ttl: 1
-                          remove_all_private_as: false
-                          remove_private_as: false
-                          replace_private_as_with_local_as: false
-                          unicast_address_family: true
-                          multicast_address_family: true
-                          admin_state: true
-                          as_propagate: none
-
+                          
                 - name: leaf-102-eth47-to-c8500-1-te6
                   interfaces:
                     - node_id: 102
@@ -121,23 +104,6 @@ apic:
                         - ip: 10.20.51.6/30
                           remote_as: 65051
                           local_as: 65151
-                          allow_self_as: false
-                          as_override: false
-                          disable_peer_as_check: false
-                          next_hop_self: false
-                          send_community: false
-                          send_ext_community: false
-                          allowed_self_as_count: 3
-                          bfd: false
-                          disable_connected_check: false
-                          ttl: 1
-                          remove_all_private_as: false
-                          remove_private_as: false
-                          replace_private_as_with_local_as: false
-                          unicast_address_family: true
-                          multicast_address_family: true
-                          admin_state: true
-                          as_propagate: none
 
                 - name: leaf-101-eth48-to-c8500-2-te5
                   interfaces:
@@ -151,23 +117,6 @@ apic:
                         - ip: 10.30.51.2/30
                           remote_as: 65051
                           local_as: 65151
-                          allow_self_as: false
-                          as_override: false
-                          disable_peer_as_check: false
-                          next_hop_self: false
-                          send_community: false
-                          send_ext_community: false
-                          allowed_self_as_count: 3
-                          bfd: false
-                          disable_connected_check: false
-                          ttl: 1
-                          remove_all_private_as: false
-                          remove_private_as: false
-                          replace_private_as_with_local_as: false
-                          unicast_address_family: true
-                          multicast_address_family: true
-                          admin_state: true
-                          as_propagate: none
 
                 - name: leaf-102-eth48-to-c8500-2-te5
                   interfaces:
@@ -181,23 +130,6 @@ apic:
                         - ip: 10.30.51.6/30
                           remote_as: 65051
                           local_as: 65151
-                          allow_self_as: false
-                          as_override: false
-                          disable_peer_as_check: false
-                          next_hop_self: false
-                          send_community: false
-                          send_ext_community: false
-                          allowed_self_as_count: 3
-                          bfd: false
-                          disable_connected_check: false
-                          ttl: 1
-                          remove_all_private_as: false
-                          remove_private_as: false
-                          replace_private_as_with_local_as: false
-                          unicast_address_family: true
-                          multicast_address_family: true
-                          admin_state: true
-                          as_propagate: none
 
           external_endpoint_groups:
             - name: external-subnets
