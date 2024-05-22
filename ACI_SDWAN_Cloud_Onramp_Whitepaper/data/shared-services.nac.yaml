@@ -1,0 +1,163 @@
+apic:
+  tenants:
+    - name: shared-services
+      vrfs:
+        - name: vrf-01
+
+      l3outs:
+        - name: shared-services.vrf-01-bgp
+          description: configured with NAC
+          vrf: vrf-01
+          domain: shared-services.vrf-01-bgp
+
+          node_profiles:
+            - name: border-leafs
+              nodes:
+                - node_id: 101
+                  router_id: 101.5.3.1
+                - node_id: 102
+                  router_id: 102.5.3.1
+              interface_profiles:
+                - name: leaf-101-eth47-to-c8500-1-te5
+                  interfaces:
+                    - node_id: 101
+                      svi: true
+                      vlan: 2053
+                      port: 47
+                      ip: 10.20.53.1/30
+                      mtu: 1500
+                      bgp_peers:
+                        - ip: 10.20.53.2/30
+                          remote_as: 65051
+                          local_as: 65151
+                          allow_self_as: false
+                          as_override: false
+                          disable_peer_as_check: false
+                          next_hop_self: false
+                          send_community: false
+                          send_ext_community: false
+                          allowed_self_as_count: 3
+                          bfd: false
+                          disable_connected_check: false
+                          ttl: 1
+                          remove_all_private_as: false
+                          remove_private_as: false
+                          replace_private_as_with_local_as: false
+                          unicast_address_family: true
+                          multicast_address_family: true
+                          admin_state: true
+                          as_propagate: none
+
+                - name: leaf-102-eth47-to-c8500-1-te6
+                  interfaces:
+                    - node_id: 102
+                      svi: true
+                      vlan: 2053
+                      port: 47
+                      ip: 10.20.53.5/30
+                      mtu: 1500
+                      bgp_peers:
+                        - ip: 10.20.53.6/30
+                          remote_as: 65051
+                          local_as: 65151
+                          allow_self_as: false
+                          as_override: false
+                          disable_peer_as_check: false
+                          next_hop_self: false
+                          send_community: false
+                          send_ext_community: false
+                          allowed_self_as_count: 3
+                          bfd: false
+                          disable_connected_check: false
+                          ttl: 1
+                          remove_all_private_as: false
+                          remove_private_as: false
+                          replace_private_as_with_local_as: false
+                          unicast_address_family: true
+                          multicast_address_family: true
+                          admin_state: true
+                          as_propagate: none
+
+                - name: leaf-101-eth48-to-c8500-2-te5
+                  interfaces:
+                    - node_id: 101
+                      svi: true
+                      vlan: 3053
+                      port: 48
+                      ip: 10.30.53.1/30
+                      mtu: 1500
+                      bgp_peers:
+                        - ip: 10.30.53.2/30
+                          remote_as: 65051
+                          local_as: 65151
+                          allow_self_as: false
+                          as_override: false
+                          disable_peer_as_check: false
+                          next_hop_self: false
+                          send_community: false
+                          send_ext_community: false
+                          allowed_self_as_count: 3
+                          bfd: false
+                          disable_connected_check: false
+                          ttl: 1
+                          remove_all_private_as: false
+                          remove_private_as: false
+                          replace_private_as_with_local_as: false
+                          unicast_address_family: true
+                          multicast_address_family: true
+                          admin_state: true
+                          as_propagate: none
+
+                - name: leaf-102-eth48-to-c8500-2-te6
+                  interfaces:
+                    - node_id: 102
+                      svi: true
+                      vlan: 3053
+                      port: 48
+                      ip: 10.30.53.5/30
+                      mtu: 1500
+                      bgp_peers:
+                        - ip: 10.30.53.6/30
+                          remote_as: 65051
+                          local_as: 65151
+                          allow_self_as: false
+                          as_override: false
+                          disable_peer_as_check: false
+                          next_hop_self: false
+                          send_community: false
+                          send_ext_community: false
+                          allowed_self_as_count: 3
+                          bfd: false
+                          disable_connected_check: false
+                          ttl: 1
+                          remove_all_private_as: false
+                          remove_private_as: false
+                          replace_private_as_with_local_as: false
+                          unicast_address_family: true
+                          multicast_address_family: true
+                          admin_state: true
+                          as_propagate: none
+
+
+
+          external_endpoint_groups:
+            - name: external-subnets
+              subnets:
+                - prefix: 10.53.0.0/16
+                  shared_route_control: true
+                  import_security: true
+                  shared_security: true
+
+              contracts:
+                imported_consumers:
+                  - permit-to-tenant-03-192.168.100.0_24
+                  - permit-to-tenant-04-192.168.200.0_24
+
+      imported_contracts:
+        - name: permit-to-tenant-03-192.168.100.0_24
+          tenant: tenant-03
+          contract: permit-to-192.168.100.0_24
+
+        - name: permit-to-tenant-04-192.168.200.0_24
+          tenant: tenant-04
+          contract: permit-to-192.168.200.0_24
