@@ -1,0 +1,67 @@
+---
+apic:
+  tenants:
+    - name: tenant-03
+      vrfs:
+        - name: vrf-01
+
+      bridge_domains:
+        - name: 192.168.100.0_24
+          vrf: vrf-01
+          subnets: 
+          - ip: 192.168.100.1/24  
+            shared: true
+            public: true
+
+        - name: 192.168.101.0_24
+          vrf: vrf-01
+          subnets: 
+          - ip: 192.168.101.1/24    
+
+        - name: 192.168.102.0_24
+          vrf: vrf-01
+          subnets: 
+          - ip: 192.168.102.1/24    
+
+      application_profiles:
+        - name: network-segments
+          endpoint_groups:
+            - name: 192.168.100.0_24
+              bridge_domain: 192.168.100.0_24
+              subnets:
+                - ip: 192.168.100.1/24
+                  shared: true
+                  public: true
+                  no_default_gateway: true
+              contracts:
+                providers:
+                  - permit-to-192.168.100.0_24
+
+            - name: 192.168.101.0_24
+              bridge_domain: 192.168.101.0_24
+
+            - name: 192.168.102.0_24
+              bridge_domain: 192.168.102.0_24
+
+      filters:
+        - name: tcp-src-any-to-dst-any
+          entries:
+            - name: src-any-to-dst-any
+              ethertype: ip
+              protocol: tcp
+        - name: icmp-src-any-to-dst-any
+          entries:
+            - name: src-any-to-dst-any
+              ethertype: ip
+              protocol: icmp
+
+      contracts:
+        - name: permit-to-192.168.100.0_24
+          scope: global
+          subjects:
+            - name: tcp-entries
+              filters:
+                - filter: tcp-src-any-to-dst-any
+            - name: other-entries
+              filters:
+                - filter: icmp-src-any-to-dst-any
