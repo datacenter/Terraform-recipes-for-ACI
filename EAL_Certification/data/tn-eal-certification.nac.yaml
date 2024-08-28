@@ -1,0 +1,50 @@
+---
+apic:
+  tenants:
+    - name: eal-certification
+      vrfs:
+        - name: vrf-01
+
+      bridge_domains:
+        - name: 192.168.66.1_24
+          vrf: vrf-01
+          subnets: 
+          - ip: 192.168.66.1/24
+
+        - name: 192.168.67.1_24
+          vrf: vrf-01
+          subnets: 
+          - ip: 192.168.67.1/24   
+
+      application_profiles:
+        - name: network-segments
+          endpoint_groups:
+            - name: client
+              bridge_domain: 192.168.66.1_24
+              # contracts:
+              #   consumers:
+              #     - permit-to-192.168.67.0_24
+
+            - name: server
+              bridge_domain: 192.168.67.1_24
+              # contracts:
+              #   providers:
+              #     - permit-to-192.168.67.0_24
+
+      # filters:
+      #   - name: tcp-src-any-to-dst-5555
+      #     entries:
+      #       - name: src-any-to-dst-5555
+      #         ethertype: ip
+      #         protocol: tcp
+      #         destination_to_port: 5555
+      #         destination_from_port: 5555
+
+      # contracts:
+      #   - name: permit-to-192.168.67.0_24
+      #     scope: context
+      #     subjects:
+      #       - name: tcp-entries
+      #         filters:
+      #           - filter: tcp-src-any-to-dst-5555
+      #             log: true
