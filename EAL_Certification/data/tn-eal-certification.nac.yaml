@@ -7,11 +7,13 @@ apic:
 
       bridge_domains:
         - name: 192.168.66.1_24
+          unknown_unicast: proxy
           vrf: vrf-01
           subnets: 
           - ip: 192.168.66.1/24
 
         - name: 192.168.67.1_24
+          unknown_unicast: proxy
           vrf: vrf-01
           subnets: 
           - ip: 192.168.67.1/24   
@@ -20,18 +22,36 @@ apic:
         - name: network-segments
           endpoint_groups:
             - name: client
+              physical_domains:
+                - phys
               bridge_domain: 192.168.66.1_24
+              static_ports:
+                - node_id: 101
+                  port: 10
+                  vlan: 66
               # contracts:
               #   consumers:
               #     - permit-to-192.168.67.0_24
 
             - name: server
+              physical_domains:
+                - phys
               bridge_domain: 192.168.67.1_24
+              static_ports:
+                - node_id: 102
+                  port: 10
+                  vlan: 67
               # contracts:
               #   providers:
               #     - permit-to-192.168.67.0_24
 
       # filters:
+      #   - name: icmp
+      #     entries:
+      #       - name: icmp
+      #         ethertype: ipv4
+      #         protocol: icmp
+
       #   - name: tcp-src-any-to-dst-5555
       #     entries:
       #       - name: src-any-to-dst-5555
@@ -44,6 +64,10 @@ apic:
       #   - name: permit-to-192.168.67.0_24
       #     scope: context
       #     subjects:
+      #       - name: icmp-entries
+      #         filters:
+      #           - filter: icmp
+      #             log: true
       #       - name: tcp-entries
       #         filters:
       #           - filter: tcp-src-any-to-dst-5555
