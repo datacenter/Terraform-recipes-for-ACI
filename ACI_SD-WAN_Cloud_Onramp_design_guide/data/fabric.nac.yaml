@@ -120,11 +120,11 @@ apic:
           - name: c8500-interfaces
             policy_group: c8500-interface-settings
             port_blocks:
-              - name: test1
+              - name: block1
                 description: connected to c8500-1-TE0/0/5
                 from_module: 1
                 from_port: 47
-              - name: test2
+              - name: block2
                 description: connected to c8500-2-TE0/0/5
                 from_module: 1
                 from_port: 48
@@ -134,11 +134,11 @@ apic:
           - name: c8500-interfaces
             policy_group: c8500-interface-settings
             port_blocks:
-              - name: test1
+              - name: block1
                 description: connected to c8500-1-TE0/0/6
                 from_module: 1
                 from_port: 47
-              - name: test2
+              - name: block2
                 description: connected to c8500-2-TE0/0/6
                 from_module: 1
                 from_port: 48

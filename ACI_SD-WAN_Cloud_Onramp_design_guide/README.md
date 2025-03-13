@@ -1,5 +1,5 @@
 ## Introduction
-This Terraform plan accompanies the Cisco ACI to SD-WAN Cloud OnRamp design guide. A link to this document is available here: [WIP](https://cisco.com).
+This Terraform plan accompanies the Cisco ACI to SD-WAN Cloud OnRamp design guide. A link to this document is available here: [Cisco Catalyst SD-WAN Cloud OnRamp Connecting ACI to AWS Design Guide](https://www.cisco.com/c/en/us/td/docs/solutions/CVD/Campus/Cisco-ACI-SDWAN-CoR-AWS-design-guide.html).
 All code required to build the ACI configuration is available in this repository.
 This Terraform plan makes use of the open-source Nexus-as-Code Terraform module for ACI. For more information visit: [DevNet Nexus-as-Code](https://developer.cisco.com/docs/nexus-as-code/)
 
